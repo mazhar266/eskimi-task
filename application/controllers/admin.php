@@ -27,6 +27,10 @@ class Admin extends CI_Controller {
      */
     public function index()
     {
+        // messages
+        $data ['cat_err_msg'] = $this->session->flashdata ('cat_err_msg');
+        $data ['cat_msg'] = $this->session->flashdata ('cat_msg');
+
         // check if any data is posted
         if ($this->input->post ())
         {
@@ -38,17 +42,16 @@ class Admin extends CI_Controller {
                     'name' => $this->input->post ('name'),
                     'parent' => $this->input->post ('parent')
                 ]);
+                $data ['cat_msg'] = 'Successfully edited the category';
             } else {
                 // insert the category
                 $this->adminmodel->createCategory ([
                     'name' => $this->input->post ('name'),
                     'parent' => $this->input->post ('parent')
                 ]);
+                $data ['cat_msg'] = 'Successfully created new category';
             }
         }
-
-        $data ['cat_err_msg'] = $this->session->flashdata ('cat_err_msg');
-        $data ['cat_msg'] = $this->session->flashdata ('cat_msg');
 
         // now load all the categories
         $data ['categories'] = $this->adminmodel->getAllCategories ();
@@ -150,5 +153,54 @@ class Admin extends CI_Controller {
             'Successfully deleted the category'
         );
         redirect ('/admin');
+    }
+
+    /**
+     * @name pages
+     * @author Mazhar Ahmed
+     *
+     * this is the pages page
+     */
+    public function pages()
+    {
+        // messages
+        $data ['page_err_msg'] = $this->session->flashdata ('page_err_msg');
+        $data ['page_msg'] = $this->session->flashdata ('page_msg');
+
+        // check if any data is posted
+        if ($this->input->post ())
+        {
+            // check if the id posted
+            if ($this->input->post ('id'))
+            {
+                // update the category
+                $this->adminmodel->updateCategory ($this->input->post ('id'), [
+                    'name' => $this->input->post ('name'),
+                    'parent' => $this->input->post ('parent')
+                ]);
+                $data ['page_msg'] = 'Successfully edited the page';
+            } else {
+                // insert the category
+                $this->adminmodel->createCategory ([
+                    'name' => $this->input->post ('name'),
+                    'parent' => $this->input->post ('parent')
+                ]);
+                $data ['page_msg'] = 'Successfully created new page';
+            }
+        }
+
+        // now load all the categories
+        $data ['categories'] = $this->adminmodel->getAllCategories ();
+
+        // build the breadcrumbs
+        foreach ($data ['categories'] as $key => $category)
+        {
+            $data ['categories'] [$key] ['breadcrumb'] = $this->buildBreadCrumb ($category);
+        }
+
+        $data ['pages'] = $this->adminmodel->getAllPages ();
+
+        // load the view
+        $this->load->view('page', $data);
     }
 }

@@ -211,4 +211,97 @@ class AdminModel extends CI_Model {
 
         return false;
     }
+
+    /**
+     * @name deletePage
+     * @author Mazhar Ahmed
+     *
+     * deletes a page by id
+     *
+     * @param $id
+     * @return bool
+     */
+    public function deletePage ($id)
+    {
+        if ($id < 1)
+        {
+            return false;
+        }
+
+        $this->db->where ('id', $id);
+        $this->db->delete ('pages');
+        return true;
+    }
+
+    /**
+     * @name createPage
+     * @author Mazhar Ahmed
+     *
+     * creates a page and returns the row
+     *
+     * @param $data
+     * @return bool / data
+     */
+    public function createPage ($data)
+    {
+        if (empty ($data))
+        {
+            return false;
+        }
+
+        $this->db->insert ('pages', $data);
+        $data ['id'] = $this->db->insert_id ();
+        return $data;
+    }
+
+    /**
+     * @name updatePage
+     * @author Mazhar Ahmed
+     *
+     * updates a page by given data using the id
+     *
+     * @param $id
+     * @param $data
+     * @return bool
+     */
+    public function updatePage ($id, $data)
+    {
+        if ($id < 1)
+        {
+            return false;
+        }
+
+        if (empty ($data))
+        {
+            return false;
+        }
+
+        $this->db->set ($data);
+        $this->db->where ('id', $id);
+        $this->db->update ('pages');
+        return true;
+    }
+
+    /**
+     * @name getAllPages
+     * @author Mazhar Ahmed
+     *
+     * returns all the pages
+     *
+     * @return array
+     */
+    public function getAllPages ()
+    {
+        $res = $this->db->get ('pages');
+        $data = [];
+        if ($res->num_rows ())
+        {
+            foreach ($res->result_array () as $row)
+            {
+                $data [] = $row;
+            }
+        }
+
+        return $data;
+    }
 }

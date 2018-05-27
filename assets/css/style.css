@@ -17,8 +17,15 @@
     text-decoration: none;
 }
 
-.category-form input, .category-form select {
+.category-form input,
+.category-form select,
+.category-form textarea {
     margin-bottom: 20px;
+}
+
+.category-form textarea {
+    min-height: 100px;
+    max-height: 400px;
 }
 
 ul.tree {

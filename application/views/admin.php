@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="<?php echo base_url (); ?>assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo base_url (); ?>assets/css/style.css">
 
-    <title>Admin</title>
+    <title>Admin | Category</title>
 </head>
 <body>
 
@@ -26,14 +26,19 @@
         <div class="col-md-12">
             &nbsp;
         </div>
+        <div class="col-md-12">
+            <h2>Categories</h2>
+        </div>
     </div>
     <form action="<?php echo base_url ('admin'); ?>" method="post">
     <div class="row category-form">
         <div class="col-md-4">
-            <input type="text" name="name" class="form-control" placeholder="Name" required>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="Name" required>
         </div>
         <div class="col-md-4">
-            <select name="parent" class="form-control">
+            <label for="parent">Parent Category</label>
+            <select name="parent" id="parent" class="form-control">
                 <option value="">No Category</option>
                 <?php foreach ($categories as $category): ?>
                     <option value="<?php echo $category['id']; ?>"><?php echo $category['breadcrumb']; ?></option>
@@ -41,6 +46,7 @@
             </select>
         </div>
         <div class="col-md-4">
+            <label>&nbsp;</label>
             <input type="submit" class="btn btn-block btn-primary" value="Add Category">
         </div>
     </div>
