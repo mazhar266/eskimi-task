@@ -172,6 +172,7 @@ class AdminModel extends CI_Model {
         }
 
         $this->db->where ('parent', $id);
+        $this->db->order_by ('name');
         $res = $this->db->get ('categories');
         $data = [];
         if ($res->num_rows ())
@@ -192,7 +193,7 @@ class AdminModel extends CI_Model {
      * returns the category by specific id
      *
      * @param $id
-     * @return bool | array
+     * @return bool|array
      */
     public function getCategory ($id)
     {

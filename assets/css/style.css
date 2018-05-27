@@ -20,3 +20,36 @@
 .category-form input, .category-form select {
     margin-bottom: 20px;
 }
+
+ul.tree {
+    overflow-x: auto;
+}
+
+ul.tree li {
+    font-size: 14px;
+}
+
+ul.tree li a {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 12px !important;
+    color: dodgerblue;
+}
+
+ul.tree ul {
+    display: block;
+    /*padding-bottom: 10px;*/
+}
+
+.edit-category-holder {
+    display: inline;
+}
+
+.edit-category-form {
+    display: none;
+}
+
+.edit-category-form input, .edit-category-form select {
+    display: inline-block;
+    border: 1px solid darkgrey;
+}
