@@ -1,0 +1,22 @@
+.site-header {
+    color: white;
+    background-color: rgba(0, 0, 0, .85);
+}
+
+.site-header a {
+    color: #999;
+    -webkit-transition: color 400ms ease;
+    -moz-transition: color 400ms ease;
+    -ms-transition: color 400ms ease;
+    -o-transition: color 400ms ease;
+    transition: color 400ms ease;
+}
+
+.site-header a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.category-form input, .category-form select {
+    margin-bottom: 20px;
+}

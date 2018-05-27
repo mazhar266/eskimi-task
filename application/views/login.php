@@ -25,7 +25,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-6 offset-md-3">
-			<form action="" method="post">
+			<form action="<?php echo base_url (); ?>" method="post">
 				<div class="form-group">
 					<label for="exampleInputEmail1">Username</label>
 					<input type="text" name="username" class="form-control" aria-describedby="emailHelp"
