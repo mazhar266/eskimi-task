@@ -174,16 +174,18 @@ class Admin extends CI_Controller {
             if ($this->input->post ('id'))
             {
                 // update the category
-                $this->adminmodel->updateCategory ($this->input->post ('id'), [
-                    'name' => $this->input->post ('name'),
-                    'parent' => $this->input->post ('parent')
+                $this->adminmodel->updatePage ($this->input->post ('id'), [
+                    'title' => $this->input->post ('title'),
+                    'body' => $this->input->post ('body'),
+                    'category' => $this->input->post ('category')
                 ]);
                 $data ['page_msg'] = 'Successfully edited the page';
             } else {
                 // insert the category
-                $this->adminmodel->createCategory ([
-                    'name' => $this->input->post ('name'),
-                    'parent' => $this->input->post ('parent')
+                $this->adminmodel->createPage ([
+                    'title' => $this->input->post ('title'),
+                    'body' => $this->input->post ('body'),
+                    'category' => $this->input->post ('category')
                 ]);
                 $data ['page_msg'] = 'Successfully created new page';
             }
@@ -200,7 +202,38 @@ class Admin extends CI_Controller {
 
         $data ['pages'] = $this->adminmodel->getAllPages ();
 
+        foreach ($data ['pages'] as $key => $page)
+        {
+            $data ['pages'] [$key] ['breadcrumb'] = $this->buildBreadCrumb (
+                $this->adminmodel->getCategory($page ['category'])
+            );
+        }
+
         // load the view
         $this->load->view('page', $data);
+    }
+
+    /**
+     * @name delete_page
+     * @author Mazhar Ahmed
+     *
+     * it will delete a page
+     *
+     * @param bool $id
+     */
+    public function delete_page ($id = false)
+    {
+        if (!$id)
+        {
+            $this->session->set_flashdata ('page_err_msg', 'Nothing to delete');
+            redirect ('/admin/pages');
+        }
+
+        $this->adminmodel->deletePage ($id);
+        $this->session->set_flashdata (
+            'page_msg',
+            'Successfully deleted the page'
+        );
+        redirect ('/admin/pages');
     }
 }

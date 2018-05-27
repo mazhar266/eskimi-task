@@ -30,10 +30,10 @@
             <h2>Pages</h2>
         </div>
     </div>
-    <form action="<?php echo base_url ('admin'); ?>" method="post">
+    <form action="<?php echo base_url ('admin/pages'); ?>" method="post">
     <div class="row category-form">
         <div class="col-md-3">
-            <input type="hidden" name="id" id="page-id" class="form-control">
+            <input type="hidden" name="id" id="id" class="form-control">
             <label for="title">Title</label>
             <input type="text" id="title" name="title" class="form-control" placeholder="Title" required>
         </div>
@@ -43,7 +43,7 @@
         </div>
         <div class="col-md-3">
             <label for="category">Category</label>
-            <select name="parent" id="category" class="form-control" required>
+            <select name="category" id="category" class="form-control" required>
                 <?php foreach ($categories as $category): ?>
                     <option value="<?php echo $category['id']; ?>"><?php echo $category['breadcrumb']; ?></option>
                 <?php endforeach; ?>
@@ -51,19 +51,32 @@
         </div>
         <div class="col-md-3">
             <label>&nbsp;</label>
-            <input type="submit" class="btn btn-block btn-primary" value="Add Category">
+            <input type="submit" class="btn btn-block btn-primary" id="submit" value="Add Page">
         </div>
     </div>
     </form>
 
     <div class="row">
         <div class="col-md-12">
+            <?php if ($page_err_msg): ?>
+                <div class="alert alert-danger" role="alert">
+                    <?php echo $page_err_msg; ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($page_msg): ?>
+                <div class="alert alert-success" role="alert">
+                    <?php echo $page_msg; ?>
+                </div>
+            <?php endif; ?>
+
             <table class="table table-striped">
                 <thead>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Title</th>
                     <th scope="col">Body</th>
+                    <th scope="col">Category</th>
                     <th scope="col">Action</th>
                 </tr>
                 </thead>
@@ -75,9 +88,14 @@
                     <th scope="row"><?php echo $i; ?></th>
                     <td><?php echo htmlspecialchars ($page ['title']); ?></td>
                     <td><?php echo ellipsize (htmlspecialchars ($page ['body']), 200, 1, '...'); ?></td>
+                    <td><?php echo $page ['breadcrumb']; ?></td>
                     <td>
-                        <a href="">Edit</a>
-                        <a href="">Delete</a>
+                        <input class="id" type="hidden" value="<?php echo $page ['id']; ?>">
+                        <input class="title" type="hidden" value="<?php echo $page ['title']; ?>">
+                        <input class="body" type="hidden" value="<?php echo $page ['body']; ?>">
+                        <input class="category" type="hidden" value="<?php echo $page ['category']; ?>">
+                        <a href="#" class="page-edit-btn">Edit</a>
+                        <a href="<?php echo base_url ('admin/delete_page/' . $page ['id']); ?>">Delete</a>
                     </td>
                 </tr>
                 <?php
@@ -93,5 +111,6 @@
 <!-- Optional JavaScript -->
 <script src="<?php echo base_url (); ?>assets/js/jquery-3.3.1.min.js"></script>
 <script src="<?php echo base_url (); ?>assets/js/bootstrap.min.js"></script>
+<script src="<?php echo base_url (); ?>assets/js/page.js"></script>
 </body>
 </html>

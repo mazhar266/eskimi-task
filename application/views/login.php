@@ -30,12 +30,12 @@
 					<label for="exampleInputEmail1">Username</label>
 					<input type="text" name="username" class="form-control" aria-describedby="emailHelp"
 						   placeholder="Enter email">
-					<small id="emailHelp" class="form-text text-muted">Default Username: Admin</small>
+					<small id="emailHelp" class="form-text text-muted">Default Username: admin</small>
 				</div>
 				<div class="form-group">
 					<label for="exampleInputPassword1">Password</label>
 					<input type="password" name="password" class="form-control" placeholder="Password">
-					<small id="emailHelp" class="form-text text-muted">Default Password: Admin</small>
+					<small id="emailHelp" class="form-text text-muted">Default Password: admin</small>
 				</div>
 				<button type="submit" class="btn btn-primary btn-block">Login</button>
 			</form>
