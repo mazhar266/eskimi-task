@@ -10,5 +10,6 @@
 ### How to run:
 - Copy the folder in `htdocs`
 - Make a database with the `eskimi.sql` from the project root
+- Update `application/config/database.php` file
 - Use username `admin` and password `admin` to login
 - Play
