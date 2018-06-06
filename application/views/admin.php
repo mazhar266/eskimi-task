@@ -41,7 +41,9 @@
             <select name="parent" id="parent" class="form-control">
                 <option value="">No Category</option>
                 <?php foreach ($categories as $category): ?>
-                    <option value="<?php echo $category['id']; ?>"><?php echo $category['breadcrumb']; ?></option>
+                    <option value="<?php echo $category['id']; ?>">
+                        <?php echo $category ['breadcrumb']; ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -68,55 +70,71 @@
 
 
             <ul class="tree">
-            <?php
-                $elements = $tree;
-                $stack = [];
-                $done = false;
-                while (!$done)
-                {
-                    $leaf = array_shift ($elements);
-                    if (!$leaf)
+                <?php
+                    // =======================
+                    // PreOrder Tree Traversal +
+                    // =======================
+
+                    $roots = getChildren($categories);
+                    $elements = $roots;
+                    $stack = [];
+                    $done = false;
+                    while (!$done)
                     {
-                        echo '</ul>';
-                        $elements = array_pop ($stack);
-                        if (!$elements && empty ($stack))
+                        // take a leaf from the element
+                        $leaf = array_shift ($elements);
+
+                        if (empty ($leaf))
                         {
-                            $done = true;
-                            break;
-                        } else {
-                            continue;
+                            // end the current list
+                            echo '</ul>';
+                            // pop elements from the stack
+                            $elements = array_pop ($stack);
+                            if (!$elements && empty ($stack))
+                            {
+                                // elements and stack are empty
+                                $done = true;
+                                break;
+                            } else {
+                                // else just skip this loop step
+                                continue;
+                            }
                         }
-                    }
-                    echo '<li>' . $leaf ['name'] .
-                        '<div class="edit-category-holder"><a href="#" class="edit-category">Edit</a>
-                        <form action="' . base_url ('admin') . '" method="post" class="edit-category-form">
-                                <input type="hidden" value="' . $leaf ['id'] . '" name="id">
-                                <input type="text" value="' . $leaf ['name'] . '" name="name">
-                                <select name="parent">
-                                    <option value="">No Category</option>';
-                    foreach ($categories as $category)
-                    {
-                        echo '<option value="' . $category['id'] . '"';
-                        if ($category ['id'] == $leaf ['parent'])
+
+                        // print the leaf first
+                        echo '<li>' . $leaf ['name'] .
+                             '<div class="edit-category-holder"><a href="#" class="edit-category">Edit</a>
+                              <form action="' . base_url ('admin') . '" method="post" class="edit-category-form">
+                              <input type="hidden" value="' . $leaf ['id'] . '" name="id">
+                              <input type="text" value="' . $leaf ['name'] . '" name="name">
+                              <select name="parent">
+                              <option value="">No Category</option>';
+                        foreach ($categories as $category)
                         {
-                            echo 'selected="selected"';
+                            echo '<option value="' . $category['id'] . '"';
+                            if ($category ['id'] == $leaf ['parent'])
+                            {
+                                echo 'selected="selected"';
+                            }
+                            echo '>' . $category['breadcrumb'] . '</option>';
                         }
-                        echo '>' . $category['breadcrumb'] . '</option>';
-                    }
-                    echo '</select><input type="submit" value="Edit"></form>
+                        echo '</select><input type="submit" value="Edit"></form>
                         </div><a href="' . base_url ('/admin/delete_category/' . $leaf ['id']) . '">Delete</a></li>';
-                    if ($leaf ['children'])
-                    {
-                        $stack [] = $elements;
-                        $elements = $leaf ['children'];
-                        echo '<ul>';
+
+                        // get the next sub tree
+                        $nextTree = getChildren($categories, $leaf ['id']);
+                        if (!empty ($nextTree))
+                        {
+                            // store to the stack
+                            $stack [] = $elements;
+                            $elements = $nextTree;
+                            // start new sub list
+                            echo '<ul>';
+                        }
+
                     }
-                }
-            ?>
+                ?>
             </ul>
-<!--            <pre>-->
-<!--                --><?php //print_r ($tree); ?>
-<!--            </pre>-->
         </div>
     </div>
 </div>

@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Admin extends CI_Controller {
 
+    // categories
     private $categories = [];
 
     public function __construct ()
@@ -19,6 +20,8 @@ class Admin extends CI_Controller {
 
         // if login is success, load the admin model
         $this->load->model ('adminmodel');
+        // load the admin helper too
+        $this->load->helper ('admin');
     }
 
     /**
@@ -55,59 +58,18 @@ class Admin extends CI_Controller {
             }
         }
 
-        // now load all the categories
+        // now load all the categories, just one database hit
         $data ['categories'] = $this->adminmodel->getAllCategories ();
         $this->categories = $data ['categories'];
 
-        // build the breadcrumbs
+        // build the breadcrumbs, so that it doesn't have to be called again and again
         foreach ($data ['categories'] as $key => $category)
         {
             $data ['categories'] [$key] ['breadcrumb'] = $this->buildBreadCrumb ($category);
         }
 
-        // now build the tree the easy way
-        // first get the roots
-        $roots = $this->getChildren ();
-        foreach ($roots as $key => $item)
-        {
-            // build tree on the root elements
-            $roots [$key] ['children'] = $this->buildTree ($item);
-        }
-
-        // pass the data to the view file
-        $data ['tree'] = $roots;
         // load the view
         $this->load->view('admin', $data);
-    }
-
-    /**
-     * @name buildTree
-     * @author Mazhar Ahmed
-     *
-     * builds the tree on given root
-     *
-     * @param $category
-     * @return bool
-     */
-    private function buildTree ($category)
-    {
-        // first find the children
-        $children = $this->getChildren ($category ['id']);
-
-        // on empty return false
-        if (empty ($children))
-        {
-            return false;
-        }
-
-        // recursion for building the tree
-        foreach ($children as $key => $child)
-        {
-            $children [$key] ['children'] = $this->buildTree ($child);
-        }
-
-        // return the tree on the element
-        return $children;
     }
 
     /**
@@ -116,7 +78,7 @@ class Admin extends CI_Controller {
      *
      * returns the category
      *
-     * @param $id of category
+     * @param $id
      * @return array
      */
     private function getCategory ($id)
@@ -128,36 +90,6 @@ class Admin extends CI_Controller {
                 return $category;
             }
         }
-    }
-
-    /**
-     * @name getChildren
-     * @author Mazhar Ahmed
-     *
-     * returns the children of given category
-     *
-     * @param $id of category
-     * @return array
-     */
-    private function getChildren ($id = false)
-    {
-        $categories = [];
-        foreach ($this->categories as $category)
-        {
-            if (!$id)
-            {
-                if (!$category ['parent'])
-                {
-                    $categories [] = $category;
-                }
-            } else {
-                if ($category ['parent'] == $id)
-                {
-                    $categories [] = $category;
-                }
-            }
-        }
-        return $categories;
     }
 
     /**
