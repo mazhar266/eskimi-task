@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Admin extends CI_Controller {
 
+    private $categories = [];
+
     public function __construct ()
     {
         parent::__construct ();
@@ -55,6 +57,7 @@ class Admin extends CI_Controller {
 
         // now load all the categories
         $data ['categories'] = $this->adminmodel->getAllCategories ();
+        $this->categories = $data ['categories'];
 
         // build the breadcrumbs
         foreach ($data ['categories'] as $key => $category)
@@ -64,7 +67,7 @@ class Admin extends CI_Controller {
 
         // now build the tree the easy way
         // first get the roots
-        $roots = $this->adminmodel->getChildren ();
+        $roots = $this->getChildren ();
         foreach ($roots as $key => $item)
         {
             // build tree on the root elements
@@ -89,7 +92,7 @@ class Admin extends CI_Controller {
     private function buildTree ($category)
     {
         // first find the children
-        $children = $this->adminmodel->getChildren ($category ['id']);
+        $children = $this->getChildren ($category ['id']);
 
         // on empty return false
         if (empty ($children))
@@ -105,6 +108,56 @@ class Admin extends CI_Controller {
 
         // return the tree on the element
         return $children;
+    }
+
+    /**
+     * @name getCategory
+     * @author Mazhar Ahmed
+     *
+     * returns the category
+     *
+     * @param $id of category
+     * @return array
+     */
+    private function getCategory ($id)
+    {
+        foreach ($this->categories as $category)
+        {
+            if ($category ['id'] == $id)
+            {
+                return $category;
+            }
+        }
+    }
+
+    /**
+     * @name getChildren
+     * @author Mazhar Ahmed
+     *
+     * returns the children of given category
+     *
+     * @param $id of category
+     * @return array
+     */
+    private function getChildren ($id = false)
+    {
+        $categories = [];
+        foreach ($this->categories as $category)
+        {
+            if (!$id)
+            {
+                if (!$category ['parent'])
+                {
+                    $categories [] = $category;
+                }
+            } else {
+                if ($category ['parent'] == $id)
+                {
+                    $categories [] = $category;
+                }
+            }
+        }
+        return $categories;
     }
 
     /**
@@ -125,7 +178,7 @@ class Admin extends CI_Controller {
         }
 
         // find the parent
-        $parent = $this->adminmodel->getCategory ($category ['parent']);
+        $parent = $this->getCategory ($category ['parent']);
         // call the recursion
         return $this->buildBreadCrumb ($parent) . ' > ' . $category ['name'];
     }

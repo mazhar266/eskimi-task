@@ -137,6 +137,8 @@ class AdminModel extends CI_Model {
     public function getAllCategories ()
     {
         $this->db->where ('status', 1);
+        $this->db->group_by ('parent, id');
+        $this->db->order_by ('id');
         $res = $this->db->get ('categories');
         $data = [];
         if ($res->num_rows ())
